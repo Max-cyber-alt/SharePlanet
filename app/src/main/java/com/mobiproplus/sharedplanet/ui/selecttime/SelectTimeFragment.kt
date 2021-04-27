@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mobiproplus.sharedplanet.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class SelectTimeFragment : Fragment() {
 
     @Inject
-    lateinit var viewModel: SelectTimeViewModel
+    lateinit var selectTimeViewModel: SelectTimeViewModel
 
     private val args: SelectTimeFragmentArgs by navArgs()
 
@@ -32,20 +33,32 @@ class SelectTimeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectPhotoAdapter = SelectTimeAdapter()
+        val selectPhotoAdapter = SelectTimeAdapter(SelectTimeAdapter.NasaTimeListener { imageUrl ->
+            selectTimeViewModel.onTimeClicked(imageUrl)
+        })
         listWithDates.adapter = selectPhotoAdapter
-        args.date.let { viewModel.getNasaPhotos(it!!) }
+        args.date.let { selectTimeViewModel.getNasaPhotos(it!!) }
 
-        viewModel.nasaPhotos.observe(viewLifecycleOwner, Observer { nasaPhotos ->
+        selectTimeViewModel.navigateToPhoto.observe(viewLifecycleOwner, Observer { imageUrl ->
+            imageUrl?.let {
+                this.findNavController().navigate(
+                    SelectTimeFragmentDirections
+                        .actionSelectPhotoFragmentToShowPhotoFragment(it)
+                )
+                selectTimeViewModel.onPhotoNavigated()
+            }
+        })
+
+        selectTimeViewModel.nasaPhotos.observe(viewLifecycleOwner, Observer { nasaPhotos ->
             progress.visibility = View.GONE
             selectPhotoAdapter.data = nasaPhotos
         })
 
-        viewModel.toastMessage.observe(viewLifecycleOwner, Observer { text ->
+        selectTimeViewModel.toastMessage.observe(viewLifecycleOwner, Observer { text ->
             text?.let {
                 progress.visibility = View.GONE
                 Toast.makeText(context, text, Toast.LENGTH_LONG).show()
-                viewModel.onToastShown()
+                selectTimeViewModel.onToastShown()
             }
         })
     }

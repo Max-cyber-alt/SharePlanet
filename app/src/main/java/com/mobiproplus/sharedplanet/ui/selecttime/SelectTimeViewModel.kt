@@ -21,6 +21,10 @@ class SelectTimeViewModel @Inject constructor(
     val toastMessage: LiveData<String?>
         get() = _toastMessage
 
+    private val _navigateToPhoto = MutableLiveData<String?>()
+    val navigateToPhoto
+        get() = _navigateToPhoto
+
     fun getNasaPhotos(selectedDate: String) {
         launchPhotosLoad { repository.getPhotos(selectedDate) }
     }
@@ -33,6 +37,14 @@ class SelectTimeViewModel @Inject constructor(
                 _toastMessage.value = error.message
             }
         }
+    }
+
+    fun onTimeClicked(imageUrl: String) {
+        _navigateToPhoto.value = imageUrl
+    }
+
+    fun onPhotoNavigated() {
+        _navigateToPhoto.value = null
     }
 
     fun onToastShown() {

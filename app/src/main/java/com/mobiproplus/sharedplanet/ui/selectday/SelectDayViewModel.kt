@@ -21,6 +21,11 @@ class SelectDayViewModel @Inject constructor(
     val toastMessage: LiveData<String?>
         get() = _toastMessage
 
+    private val _navigateToSelectTime = MutableLiveData<String?>()
+    val navigateToSelectTime
+        get() = _navigateToSelectTime
+
+
     init {
         launchDatesLoad { repository.getDates() }
     }
@@ -33,6 +38,14 @@ class SelectDayViewModel @Inject constructor(
                 _toastMessage.value = error.message
             }
         }
+    }
+
+    fun onDateClicked(date: String) {
+        _navigateToSelectTime.value = date
+    }
+
+    fun onSelectedTimeNavigated() {
+        _navigateToSelectTime.value = null
     }
 
     fun onToastShown() {

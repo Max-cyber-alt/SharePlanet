@@ -9,7 +9,7 @@ data class NasaPhoto(
     var date: String = ""
 ) {
 
-    fun getImageUrl(): String? {
+    fun getImageUrl(): String {
         //https://api.nasa.gov/EPIC/archive/enhanced/2016/12/04/png/epic_RBG_20161204003633.png?api_key=DEMO_KEY
         val sb = StringBuilder()
         sb.append("https://api.nasa.gov/EPIC/archive/natural/")
