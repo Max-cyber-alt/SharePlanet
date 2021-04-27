@@ -1,10 +1,10 @@
 package com.mobiproplus.sharedplanet.data.local
 
-import com.mobiproplus.sharedplanet.data.local.db.DatabaseFaker
+import com.mobiproplus.sharedplanet.data.local.db.EarthDao
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(
-    private val databaseFaker: DatabaseFaker
+    private val earthDao: EarthDao
 ) {
-    fun getSomeLocalData() = databaseFaker.getSomeData()
+    fun getSomeLocalData() = earthDao.getDates()
 }

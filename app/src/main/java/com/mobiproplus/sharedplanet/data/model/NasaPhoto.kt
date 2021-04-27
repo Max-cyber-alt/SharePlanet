@@ -1,12 +1,16 @@
 package com.mobiproplus.sharedplanet.data.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mobiproplus.sharedplanet.data.network.api.ServiceApi
 
+@Entity(tableName = "photos")
 data class NasaPhoto(
-    val identifier: String = "",
-    val caption: String = "",
-    val image: String = "",
-    var date: String = ""
+    @PrimaryKey @ColumnInfo(name = "identifier") val identifier: String = "",
+    @ColumnInfo(name = "caption") val caption: String = "",
+    @ColumnInfo(name = "image") val image: String = "",
+    @ColumnInfo(name = "date") var date: String = ""
 ) {
 
     fun getImageUrl(): String {

@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobiproplus.sharedplanet.data.DataRepository
 import com.mobiproplus.sharedplanet.data.model.NasaPhoto
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SelectTimeViewModel @Inject constructor(
     private val repository: DataRepository
 ) : ViewModel() {

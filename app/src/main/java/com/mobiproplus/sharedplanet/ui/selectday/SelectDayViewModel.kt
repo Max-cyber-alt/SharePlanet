@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobiproplus.sharedplanet.data.DataRepository
 import com.mobiproplus.sharedplanet.data.model.NasaDate
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SelectDayViewModel @Inject constructor(
     repository: DataRepository
 ) : ViewModel() {
