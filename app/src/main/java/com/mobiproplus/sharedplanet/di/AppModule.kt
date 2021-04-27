@@ -8,7 +8,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -52,7 +51,6 @@ object AppModule {
             .baseUrl(ServiceApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
     @Provides

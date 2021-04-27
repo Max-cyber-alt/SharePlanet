@@ -5,11 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.mobiproplus.sharedplanet.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_select_time.*
+import kotlinx.android.synthetic.main.fragment_select_time.progress
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,6 +39,14 @@ class SelectTimeFragment : Fragment() {
         viewModel.nasaPhotos.observe(viewLifecycleOwner, Observer { nasaPhotos ->
             progress.visibility = View.GONE
             selectPhotoAdapter.data = nasaPhotos
+        })
+
+        viewModel.toastMessage.observe(viewLifecycleOwner, Observer { text ->
+            text?.let {
+                progress.visibility = View.GONE
+                Toast.makeText(context, text, Toast.LENGTH_LONG).show()
+                viewModel.onToastShown()
+            }
         })
     }
 }

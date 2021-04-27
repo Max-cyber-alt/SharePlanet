@@ -1,39 +1,41 @@
 package com.mobiproplus.sharedplanet.ui.selecttime
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mobiproplus.sharedplanet.data.DataRepository
 import com.mobiproplus.sharedplanet.data.model.NasaPhoto
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SelectTimeViewModel @Inject constructor(
     private val repository: DataRepository
 ) : ViewModel() {
-    private val TAG = "SelectTimeViewModel"
-    private val disposable: CompositeDisposable = CompositeDisposable()
 
     private val _nasaPhotos = MutableLiveData<List<NasaPhoto>>()
     val nasaPhotos: LiveData<List<NasaPhoto>>
         get() = _nasaPhotos
 
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?>
+        get() = _toastMessage
+
     fun getNasaPhotos(selectedDate: String) {
-        disposable.add(repository.getPhotos(selectedDate)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result -> _nasaPhotos.value = result },
-                { th -> Log.e(TAG, th.toString()) }
-            )
-        )
+        launchPhotosLoad { repository.getPhotos(selectedDate) }
     }
 
-    override fun onCleared() {
-        disposable.dispose()
-        super.onCleared()
+    private fun launchPhotosLoad(photos: suspend () -> List<NasaPhoto>) {
+        viewModelScope.launch {
+            try {
+                _nasaPhotos.value = photos.invoke()
+            } catch (error: Throwable) {
+                _toastMessage.value = error.message
+            }
+        }
+    }
+
+    fun onToastShown() {
+        _toastMessage.value = null
     }
 }

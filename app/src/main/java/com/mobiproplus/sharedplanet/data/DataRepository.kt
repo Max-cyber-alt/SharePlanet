@@ -8,13 +8,8 @@ class DataRepository @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val networkDataSource: NetworkDataSource
 ) {
-    fun getInfo() = networkDataSource.getDates()
-        .doOnSuccess {
+    suspend fun getDates() = networkDataSource.getDates()
 
-        }
+    suspend fun getPhotos(date: String) = networkDataSource.getPhotos(date)
 
-    fun getPhotos(date: String) = networkDataSource.getPhotos(date)
-        .doOnSuccess {
-
-        }
 }

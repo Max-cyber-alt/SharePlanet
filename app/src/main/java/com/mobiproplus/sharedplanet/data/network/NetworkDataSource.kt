@@ -6,6 +6,6 @@ import javax.inject.Inject
 class NetworkDataSource @Inject constructor(
     private val serviceApi: ServiceApi
 ) {
-    fun getDates() = serviceApi.getDatesWithPhoto()
-    fun getPhotos(date: String) = serviceApi.getPhotosByDate(date)
+    suspend fun getDates() = serviceApi.getDatesWithPhoto()
+    suspend fun getPhotos(date: String) = serviceApi.getPhotosByDate(date)
 }

@@ -1,41 +1,41 @@
 package com.mobiproplus.sharedplanet.ui.selectday
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mobiproplus.sharedplanet.data.DataRepository
 import com.mobiproplus.sharedplanet.data.model.NasaDate
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SelectDayViewModel @Inject constructor(
     repository: DataRepository
 ) : ViewModel() {
 
-    private val TAG = "SelectDayViewModel"
-    private val disposable: CompositeDisposable = CompositeDisposable()
-
     private val _dataInfo = MutableLiveData<List<NasaDate>>()
     val dataInfo: LiveData<List<NasaDate>>
         get() = _dataInfo
 
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?>
+        get() = _toastMessage
+
     init {
-        disposable.add(
-            repository.getInfo()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { result -> _dataInfo.value = result },
-                    { th -> Log.e(TAG, th.toString()) }
-                )
-        )
+        launchDatesLoad { repository.getDates() }
     }
 
-    override fun onCleared() {
-        disposable.dispose()
-        super.onCleared()
+    private fun launchDatesLoad(dates: suspend () -> List<NasaDate>) {
+        viewModelScope.launch {
+            try {
+                _dataInfo.value = dates.invoke()
+            } catch (error: Throwable) {
+                _toastMessage.value = error.message
+            }
+        }
+    }
+
+    fun onToastShown() {
+        _toastMessage.value = null
     }
 }
