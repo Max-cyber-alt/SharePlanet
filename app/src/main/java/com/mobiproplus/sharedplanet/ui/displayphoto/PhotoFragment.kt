@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.*
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -18,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.mobiproplus.sharedplanet.R
+import com.mobiproplus.sharedplanet.utils.showShortToast
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 
@@ -34,7 +34,7 @@ class PhotoFragment : Fragment() {
             if (isGranted) {
                 performSharing()
             } else {
-                showStorageWarning()
+                showShortToast(getString(R.string.permission_denied))
             }
         }
 
@@ -65,7 +65,7 @@ class PhotoFragment : Fragment() {
                 if (photo != null) {
                     setWallpaperBitmap()
                 } else {
-                    showLoadingWarning()
+                    showShortToast(getString(R.string.photo_is_loading))
                 }
                 return true
             }
@@ -73,7 +73,7 @@ class PhotoFragment : Fragment() {
                 if (photo != null) {
                     performSharing()
                 } else {
-                    showLoadingWarning()
+                    showShortToast(getString(R.string.photo_is_loading))
                 }
                 return true
             }
@@ -95,7 +95,7 @@ class PhotoFragment : Fragment() {
         val wallpaperManager =
             WallpaperManager.getInstance(activity?.applicationContext)
         wallpaperManager.setBitmap(photo)
-        Toast.makeText(context, R.string.set_as_wallpaper_completed, Toast.LENGTH_SHORT).show()
+        showShortToast(getString(R.string.set_as_wallpaper_completed))
     }
 
     private fun performSharing() {
@@ -115,13 +115,5 @@ class PhotoFragment : Fragment() {
         } else {
             requestPermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
-    }
-
-    private fun showLoadingWarning() {
-        Toast.makeText(context, getString(R.string.photo_is_loading), Toast.LENGTH_SHORT).show()
-    }
-
-    private fun showStorageWarning() {
-        Toast.makeText(context, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
     }
 }

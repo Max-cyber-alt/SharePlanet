@@ -5,12 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mobiproplus.sharedplanet.R
+import com.mobiproplus.sharedplanet.utils.showLongToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_select_day.*
 
@@ -51,10 +51,10 @@ class SelectDayFragment : Fragment() {
             mainAdapter.data = nasaDates
         })
 
-        selectDayViewModel.toastMessage.observe(viewLifecycleOwner, Observer { text ->
-            text?.let {
+        selectDayViewModel.toastMessage.observe(viewLifecycleOwner, Observer { message ->
+            message?.let {
                 progress.visibility = View.GONE
-                Toast.makeText(context, text, Toast.LENGTH_LONG).show()
+                showLongToast(it)
                 selectDayViewModel.onToastShown()
             }
         })
