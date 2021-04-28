@@ -48,7 +48,7 @@ class SelectTimeFragment : Fragment() {
             }
         })
 
-        selectTimeViewModel.nasaPhotos.observe(viewLifecycleOwner, Observer { nasaPhotos ->
+        selectTimeViewModel.photos.observe(viewLifecycleOwner, Observer { nasaPhotos ->
             progress.visibility = View.GONE
             selectPhotoAdapter.data = nasaPhotos
         })

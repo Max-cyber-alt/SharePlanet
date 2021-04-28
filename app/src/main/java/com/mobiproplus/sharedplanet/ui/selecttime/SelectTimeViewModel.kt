@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobiproplus.sharedplanet.data.DataRepository
-import com.mobiproplus.sharedplanet.data.model.NasaPhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,9 +15,7 @@ class SelectTimeViewModel @Inject constructor(
     private val repository: DataRepository
 ) : ViewModel() {
 
-    private val _nasaPhotos = MutableLiveData<List<NasaPhoto>>()
-    val nasaPhotos: LiveData<List<NasaPhoto>>
-        get() = _nasaPhotos
+    val photos = repository.photos
 
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?>
@@ -31,10 +29,10 @@ class SelectTimeViewModel @Inject constructor(
         launchPhotosLoad { repository.getPhotos(selectedDate) }
     }
 
-    private fun launchPhotosLoad(photos: suspend () -> List<NasaPhoto>) {
-        viewModelScope.launch {
+    private fun launchPhotosLoad(fetchPhotos: suspend () -> Unit): Job {
+        return viewModelScope.launch {
             try {
-                _nasaPhotos.value = photos.invoke()
+                fetchPhotos()
             } catch (error: Throwable) {
                 _toastMessage.value = error.message
             }

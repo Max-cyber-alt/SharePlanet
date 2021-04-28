@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mobiproplus.sharedplanet.data.DataRepository
 import com.mobiproplus.sharedplanet.data.model.NasaDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,9 +16,7 @@ class SelectDayViewModel @Inject constructor(
     repository: DataRepository
 ) : ViewModel() {
 
-    private val _dataInfo = MutableLiveData<List<NasaDate>>()
-    val dataInfo: LiveData<List<NasaDate>>
-        get() = _dataInfo
+    val dates: LiveData<List<NasaDate>> = repository.dates
 
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?>
@@ -27,15 +26,14 @@ class SelectDayViewModel @Inject constructor(
     val navigateToSelectTime
         get() = _navigateToSelectTime
 
-
     init {
-        launchDatesLoad { repository.getDates() }
+        launchDatesLoad { repository.fetchDates() }
     }
 
-    private fun launchDatesLoad(dates: suspend () -> List<NasaDate>) {
-        viewModelScope.launch {
+    private fun launchDatesLoad(fetchDates: suspend () -> Unit): Job {
+        return viewModelScope.launch {
             try {
-                _dataInfo.value = dates.invoke()
+                fetchDates()
             } catch (error: Throwable) {
                 _toastMessage.value = error.message
             }

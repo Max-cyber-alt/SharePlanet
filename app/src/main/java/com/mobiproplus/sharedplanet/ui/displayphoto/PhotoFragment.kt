@@ -9,21 +9,25 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.*
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.davemorrissey.labs.subscaleview.ImageSource
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.mobiproplus.sharedplanet.R
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
-import kotlinx.android.synthetic.main.fragment_photo.*
 
 class PhotoFragment : Fragment() {
 
     private val args: PhotoFragmentArgs by navArgs()
     private var photo: Bitmap? = null
+
+    private lateinit var nasaImage: SubsamplingScaleImageView
+    private lateinit var progress: ProgressBar
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -44,6 +48,9 @@ class PhotoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+
+        nasaImage = view.findViewById(R.id.nasaImage)
+        progress = view.findViewById(R.id.progress)
 
         loadImage()
     }
@@ -77,11 +84,9 @@ class PhotoFragment : Fragment() {
     private fun loadImage() {
         ImageLoader.getInstance().loadImage(args.photoUrl, object : SimpleImageLoadingListener() {
             override fun onLoadingComplete(imageUri: String, view: View?, loadedImage: Bitmap) {
-                if (!activity?.isFinishing!!) {
-                    photo = loadedImage
-                    nasaImage.setImage(ImageSource.cachedBitmap(loadedImage))
-                    progress.visibility = View.GONE
-                }
+                photo = loadedImage
+                nasaImage.setImage(ImageSource.cachedBitmap(loadedImage))
+                progress.visibility = View.GONE
             }
         })
     }
@@ -94,8 +99,11 @@ class PhotoFragment : Fragment() {
     }
 
     private fun performSharing() {
-        if (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             val path = MediaStore.Images.Media.insertImage(
                 activity?.contentResolver, photo, args.photoUrl, ""
             )

@@ -46,7 +46,7 @@ class SelectDayFragment : Fragment() {
             }
         })
 
-        selectDayViewModel.dataInfo.observe(viewLifecycleOwner, Observer { nasaDates ->
+        selectDayViewModel.dates.observe(viewLifecycleOwner, Observer { nasaDates ->
             progress.visibility = View.GONE
             mainAdapter.data = nasaDates
         })
