@@ -29,12 +29,12 @@ class SelectDayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mainAdapter = SelectDayAdapter(SelectDayAdapter.NasaDateListener { date ->
+        val selectDayAdapter = SelectDayAdapter(SelectDayAdapter.NasaDateListener { date ->
             selectDayViewModel.onDateClicked(date)
         })
         val layoutManager = GridLayoutManager(context, 2)
         dateList.layoutManager = layoutManager
-        dateList.adapter = mainAdapter
+        dateList.adapter = selectDayAdapter
 
         selectDayViewModel.navigateToSelectTime.observe(viewLifecycleOwner, Observer { date ->
             date?.let {
@@ -48,7 +48,7 @@ class SelectDayFragment : Fragment() {
 
         selectDayViewModel.dates.observe(viewLifecycleOwner, Observer { nasaDates ->
             progress.visibility = View.GONE
-            mainAdapter.data = nasaDates
+            selectDayAdapter.data = nasaDates
         })
 
         selectDayViewModel.toastMessage.observe(viewLifecycleOwner, Observer { message ->
