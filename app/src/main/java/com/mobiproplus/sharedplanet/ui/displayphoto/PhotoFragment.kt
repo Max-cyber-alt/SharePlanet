@@ -88,6 +88,10 @@ class PhotoFragment : Fragment() {
                 nasaImage.setImage(ImageSource.cachedBitmap(loadedImage))
                 progress.visibility = View.GONE
             }
+
+            override fun onLoadingCancelled(imageUri: String?, view: View?) {
+                loadImage()
+            }
         })
     }
 
