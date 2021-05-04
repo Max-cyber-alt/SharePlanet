@@ -15,8 +15,8 @@ android {
         applicationId "com.mobiproplus.sharedplanet"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 3
-        versionName "1.1"
+        versionCode 4
+        versionName "1.2"
         setProperty("archivesBaseName", "SaredPlanet-$versionName-$versionCode")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
