@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_set_wallpaper"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_wallpaper"
         android:title="@string/set_as_wallpaper" />
 
     <item
         android:id="@+id/action_share"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_share"
         android:title="@string/share" />
 </menu>

@@ -8,7 +8,7 @@
     tools:context=".ui.selectday.SelectDayFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listWithDates"
+        android:id="@+id/timesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

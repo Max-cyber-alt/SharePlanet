@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.view.*
 import android.widget.ProgressBar
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
@@ -63,7 +64,7 @@ class PhotoFragment : Fragment() {
         return when (item.itemId) {
             R.id.action_set_wallpaper -> {
                 if (photo != null) {
-                    setWallpaperBitmap()
+                    showDialogForSetWallpaper()
                 } else {
                     showShortToast(getString(R.string.photo_is_loading))
                 }
@@ -93,6 +94,14 @@ class PhotoFragment : Fragment() {
                 loadImage()
             }
         })
+    }
+
+    private fun showDialogForSetWallpaper() {
+        AlertDialog.Builder(requireContext())
+            .setMessage(getString(R.string.set_as_wallpaper_question))
+            .setPositiveButton(getString(R.string.ok)) { _, _ -> setWallpaperBitmap() }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
     }
 
     private fun setWallpaperBitmap() {

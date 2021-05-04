@@ -36,7 +36,7 @@ class SelectTimeAdapter(val clickListener: NasaTimeListener) :
         }
     }
 
-    class NasaTimeListener(val clickListener: (imageUrl: String) -> Unit) {
-        fun onClick(item: NasaPhoto) = clickListener(item.getImageUrl())
+    class NasaTimeListener(val clickListener: (imageUrl: String, time: String) -> Unit) {
+        fun onClick(item: NasaPhoto) = clickListener(item.getImageUrl(), item.date)
     }
 }

@@ -30,21 +30,12 @@ class SelectDayFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val selectDayAdapter = SelectDayAdapter(SelectDayAdapter.NasaDateListener { date ->
-            selectDayViewModel.onDateClicked(date)
+            toSelectPhotoFragment(date)
         })
-        val layoutManager = GridLayoutManager(context, 2)
-        dateList.layoutManager = layoutManager
-        dateList.adapter = selectDayAdapter
 
-        selectDayViewModel.navigateToSelectTime.observe(viewLifecycleOwner, Observer { date ->
-            date?.let {
-                this.findNavController().navigate(
-                    SelectDayFragmentDirections
-                        .actionMainFragmentToSelectPhotoFragment(it)
-                )
-                selectDayViewModel.onSelectedTimeNavigated()
-            }
-        })
+        val layoutManager = GridLayoutManager(context, 2)
+        datesRecyclerView.layoutManager = layoutManager
+        datesRecyclerView.adapter = selectDayAdapter
 
         selectDayViewModel.dates.observe(viewLifecycleOwner, Observer { nasaDates ->
             progress.visibility = View.GONE
@@ -58,5 +49,12 @@ class SelectDayFragment : Fragment() {
                 selectDayViewModel.onToastShown()
             }
         })
+    }
+
+    private fun toSelectPhotoFragment(date: String) {
+        findNavController().navigate(
+            SelectDayFragmentDirections
+                .actionMainFragmentToSelectPhotoFragment(date)
+        )
     }
 }

@@ -39,10 +39,15 @@
     <fragment
         android:id="@+id/showPhotoFragment"
         android:name="com.mobiproplus.sharedplanet.ui.displayphoto.PhotoFragment"
-        android:label=""
+        android:label="{time}"
         tools:layout="@layout/fragment_photo">
         <argument
             android:name="photoUrl"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="time"
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />

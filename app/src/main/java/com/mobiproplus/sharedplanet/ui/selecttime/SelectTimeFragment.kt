@@ -32,21 +32,12 @@ class SelectTimeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectPhotoAdapter = SelectTimeAdapter(SelectTimeAdapter.NasaTimeListener { imageUrl ->
-            selectTimeViewModel.onTimeClicked(imageUrl)
+        val selectPhotoAdapter = SelectTimeAdapter(SelectTimeAdapter.NasaTimeListener { imageUrl, time ->
+            toShowPhotoFragment(imageUrl, time)
         })
-        listWithDates.adapter = selectPhotoAdapter
-        args.date.let { selectTimeViewModel.getNasaPhotos(it!!) }
 
-        selectTimeViewModel.navigateToPhoto.observe(viewLifecycleOwner, Observer { imageUrl ->
-            imageUrl?.let {
-                this.findNavController().navigate(
-                    SelectTimeFragmentDirections
-                        .actionSelectPhotoFragmentToShowPhotoFragment(it)
-                )
-                selectTimeViewModel.onPhotoNavigated()
-            }
-        })
+        timesRecyclerView.adapter = selectPhotoAdapter
+        args.date.let { selectTimeViewModel.getNasaPhotos(it!!) }
 
         selectTimeViewModel.photos.observe(viewLifecycleOwner, Observer { nasaPhotos ->
             progress.visibility = View.GONE
@@ -57,8 +48,15 @@ class SelectTimeFragment : Fragment() {
             message?.let {
                 progress.visibility = View.GONE
                 showLongToast(it)
-                 selectTimeViewModel.onToastShown()
+                selectTimeViewModel.onToastShown()
             }
         })
+    }
+
+    private fun toShowPhotoFragment(imageUrl: String, time: String) {
+        findNavController().navigate(
+            SelectTimeFragmentDirections
+                .actionSelectPhotoFragmentToShowPhotoFragment(imageUrl, time)
+        )
     }
 }
