@@ -6,6 +6,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
 @HiltAndroidApp
 class App : Application() {
@@ -14,6 +15,7 @@ class App : Application() {
         super.onCreate()
 
         initImageLoader()
+        initTimber()
     }
 
     private fun initImageLoader() {
@@ -27,5 +29,9 @@ class App : Application() {
             .build()
 
         ImageLoader.getInstance().init(config)
+    }
+
+    private fun initTimber() {
+        if(BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 }

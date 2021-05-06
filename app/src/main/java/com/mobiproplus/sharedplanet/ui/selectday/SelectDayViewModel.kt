@@ -9,6 +9,7 @@ import com.mobiproplus.sharedplanet.data.model.NasaDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +32,7 @@ class SelectDayViewModel @Inject constructor(
             try {
                 fetchDates()
             } catch (error: Throwable) {
+                Timber.e(error)
                 _toastMessage.value = error.message
             }
         }

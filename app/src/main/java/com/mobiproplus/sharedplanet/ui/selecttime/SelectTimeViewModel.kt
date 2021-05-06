@@ -9,6 +9,7 @@ import com.mobiproplus.sharedplanet.data.model.NasaPhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +34,7 @@ class SelectTimeViewModel @Inject constructor(
             try {
                 _photos.value = photos()
             } catch (error: Throwable) {
+                Timber.e(error)
                 _toastMessage.value = error.message
             }
         }
